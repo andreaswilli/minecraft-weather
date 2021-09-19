@@ -45,10 +45,17 @@ function setText(selector, text) {
 
 function setImage(description) {
   const max = NO_OF_IMAGES[description];
-  const random = Math.floor(Math.random() * max + 1);
+  const num = calculateImageNumber(max);
   document
     .querySelector(".bg-image")
-    .setAttribute("src", `assets/images/${description}_${random}.png`);
+    .setAttribute("src", `assets/images/${description}_${num}.png`);
+}
+
+function calculateImageNumber(max) {
+  const now = new Date();
+  const msSinceMidnight = now.getTime() - now.setHours(0, 0, 0, 0);
+  const TTL = 1000 * 60 * 30; // 30min
+  return (Math.floor(msSinceMidnight / TTL) % max) + 1;
 }
 
 function updateLinks() {
