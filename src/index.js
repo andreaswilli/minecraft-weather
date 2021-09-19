@@ -35,7 +35,10 @@ async function initPage() {
         "Note: Using location based on IP address. For more precise data enable location services.";
       location = await withCache(getIPAddress, "ip");
     }
-    const currentWeather = await getCurrentWeather(location);
+    const currentWeather = await withCache(
+      () => getCurrentWeather(location),
+      "weather"
+    );
 
     if (isFahrenheit) {
       setInnerText(".temperature", currentWeather.temp_F + "°F");
