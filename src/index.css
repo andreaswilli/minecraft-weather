@@ -31,26 +31,39 @@ body {
   margin: 20px;
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
   gap: 8px;
+  color: white;
+  max-width: 300px;
 }
 
 .overlay-container--left {
   left: 0;
   right: unset;
   text-align: left;
+  align-items: flex-start;
 }
 
 .weather-overlay {
-  color: white;
   background: rgba(33, 33, 33, 0.7);
   padding: 0 8px 8px 8px;
   display: inline-block;
 }
 
-a {
+.settings-overlay {
   font-size: 0.8rem;
+  padding: 8px;
   transition: opacity 300ms ease-in-out;
-  color: #333;
+  background: rgba(33, 33, 33, 0.7);
+}
+
+a {
+  color: white;
+  display: block;
+}
+
+a + * {
+  margin-top: 8px;
 }
 
 .hidden {

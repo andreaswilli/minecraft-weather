@@ -1,3 +1,4 @@
+import { withCache } from "./cache.js";
 import { NO_OF_IMAGES, WEATHER_MAPPING, WWO_CODE } from "./constants.js";
 
 const isFahrenheit = /[&?]unit=([^&]+)/.exec(location.search)?.[1] === "F";
@@ -14,7 +15,16 @@ async function initPage() {
   }
   setText(".description", "loading...");
   try {
-    const current_weather = await getCurrentWeather();
+    let location;
+    try {
+      const coords = await withCache(getGeoLocation, "location");
+      location = `[${coords.lat},${coords.lon}]`;
+    } catch (e) {
+      document.querySelector(".info-text").innerText =
+        "Note: Using location based on IP address. For more precise data enable location services.";
+      location = await withCache(getIPAddress, "ip");
+    }
+    const current_weather = await getCurrentWeather(location);
     if (isFahrenheit) {
       setText(".temperature", current_weather.temp_F + "°F");
     } else {
@@ -42,10 +52,28 @@ function setLastImage() {
   document.querySelector(".bg-image").classList.remove("hidden");
 }
 
-async function getCurrentWeather() {
+function getGeoLocation() {
+  return new Promise((res, rej) => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        res({
+          lon: pos.coords.longitude,
+          lat: pos.coords.latitude,
+        });
+      },
+      rej,
+      { maximumAge: 0 }
+    );
+  });
+}
+
+async function getIPAddress() {
   const ip_res = await fetch("https://api.ipify.org");
-  const ip = await ip_res.text();
-  const weather_res = await fetch(`https://wttr.in/${ip}?format=j1`);
+  return ip_res.text();
+}
+
+async function getCurrentWeather(location) {
+  const weather_res = await fetch(`http://wttr.in/${location}?format=j1`);
   const weather = await weather_res.json();
   return weather.current_condition[0];
 }
@@ -92,20 +120,14 @@ function updateLinks() {
 }
 
 function hideAndShowLinks() {
-  const unitLink = document.querySelector(".unit-switch");
-  const positionLink = document.querySelector(".position-switch");
-  unitLink.classList.add("hidden");
-  positionLink.classList.add("hidden");
-
+  const settingsOverlay = document.querySelector(".settings-overlay");
   let timer;
 
   document.addEventListener("mousemove", () => {
-    unitLink.classList.remove("hidden");
-    positionLink.classList.remove("hidden");
+    settingsOverlay.classList.remove("hidden");
     clearTimeout(timer);
     timer = setTimeout(() => {
-      unitLink.classList.add("hidden");
-      positionLink.classList.add("hidden");
+      settingsOverlay.classList.add("hidden");
     }, 1000);
   });
 }
