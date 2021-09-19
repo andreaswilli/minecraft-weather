@@ -19,21 +19,38 @@ body {
   object-fit: cover;
 }
 
-.weather-overlay {
+.overlay-container {
   position: absolute;
   top: 0;
   right: 0;
-  color: white;
-  background: rgba(33, 33, 33, 0.7);
-  padding: 0 8px 8px 8px;
-  margin: 20px;
   text-align: right;
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.weather-overlay--left {
+.overlay-container--left {
   left: 0;
   right: unset;
   text-align: left;
+}
+
+.weather-overlay {
+  color: white;
+  background: rgba(33, 33, 33, 0.7);
+  padding: 0 8px 8px 8px;
+  display: inline-block;
+}
+
+a {
+  font-size: 0.8rem;
+  transition: opacity 300ms ease-in-out;
+  color: #333;
+}
+
+.hidden {
+  opacity: 0;
 }
 
 .temperature {

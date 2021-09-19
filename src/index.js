@@ -1,12 +1,14 @@
-const isFahrenheit = /[&?]unit=([^&]+)/.exec(location.search)?.[1] === "f";
-const overlayLeft = /[&?]overlay=([^&]+)/.exec(location.search)?.[1] === "l";
+const isFahrenheit = /[&?]unit=([^&]+)/.exec(location.search)?.[1] === "F";
+const overlayLeft = /[&?]overlay=([^&]+)/.exec(location.search)?.[1] === "left";
 
-(async function () {
+initPage();
+
+async function initPage() {
   try {
     if (overlayLeft) {
       document
-        .querySelector(".weather-overlay")
-        .classList.add("weather-overlay--left");
+        .querySelector(".overlay-container")
+        .classList.add("overlay-container--left");
     }
     setText(".description", "loading...");
     const current_weather = await getCurrentWeather();
@@ -19,13 +21,15 @@ const overlayLeft = /[&?]overlay=([^&]+)/.exec(location.search)?.[1] === "l";
     const weather_description =
       WEATHER_MAPPING[WWO_CODE[current_weather.weatherCode]];
     setImage(weather_description);
+    updateLinks();
+    hideAndShowLinks();
   } catch (e) {
     setText(
       ".description",
       "API request failed. Was it blocked by your ad/script blocker?"
     );
   }
-})();
+}
 
 async function getCurrentWeather() {
   const ip_res = await fetch("https://api.ipify.org");
@@ -45,6 +49,47 @@ function setImage(description) {
   document
     .querySelector(".bg-image")
     .setAttribute("src", `assets/images/${description}_${random}.png`);
+}
+
+function updateLinks() {
+  const currentUnit = isFahrenheit ? "F" : "C";
+  const otherUnit = isFahrenheit ? "C" : "F";
+  const currentPosition = overlayLeft ? "left" : "right";
+  const otherPosition = overlayLeft ? "right" : "left";
+
+  const unitLink = document.querySelector(".unit-switch");
+  unitLink.innerText = `switch to °${otherUnit}`;
+  unitLink.setAttribute(
+    "href",
+    `?unit=${otherUnit}&overlay=${currentPosition}`
+  );
+
+  const positionLink = document.querySelector(".position-switch");
+  positionLink.innerText = `move to the ${otherPosition}`;
+  positionLink.setAttribute(
+    "href",
+    `?unit=${currentUnit}&overlay=${otherPosition}`
+  );
+}
+
+function hideAndShowLinks() {
+  const unitLink = document.querySelector(".unit-switch");
+  const positionLink = document.querySelector(".position-switch");
+  unitLink.classList.add("hidden");
+  positionLink.classList.add("hidden");
+
+  let timer;
+
+  document.addEventListener("mousemove", () => {
+    unitLink.classList.remove("hidden");
+    positionLink.classList.remove("hidden");
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      console.log("timeout");
+      unitLink.classList.add("hidden");
+      positionLink.classList.add("hidden");
+    }, 1000);
+  });
 }
 
 // https://github.com/chubin/wttr.in/blob/master/lib/constants.py
