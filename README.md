@@ -6,7 +6,7 @@ This is a small website to display the current weather using Mincraft screenshot
 
 ## Use as desktop wallpaper
 
-- First, visit https://andreaswilli.github.io/minecraft-weather and choose your settings (temparature unit, overlay position).
+- First, visit https://andreaswilli.github.io/minecraft-weather and choose your settings (temperature unit, overlay position).
 - Next, copy the url from your address bar.
 - The next step depends on your operating system:
 
