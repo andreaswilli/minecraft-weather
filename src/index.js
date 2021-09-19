@@ -3,7 +3,7 @@ import {
   getGeoLocation,
   getCurrentWeather,
 } from "./api-requests.js";
-import { withCache } from "./cache.js";
+import { TTL, withCache } from "./cache.js";
 import { WEATHER_MAPPING, WWO_CODE } from "./constants.js";
 import {
   setInnerText,
@@ -50,6 +50,7 @@ async function initPage() {
     setImage(weatherDescription);
     updateLinks(isFahrenheit, overlayLeft);
     showOnMouseMove(".settings-overlay");
+    periodicallyRefreshPage();
   } catch (e) {
     setInnerText(
       ".description",
@@ -57,4 +58,10 @@ async function initPage() {
     );
     throw e;
   }
+}
+
+function periodicallyRefreshPage(interval = TTL) {
+  setInterval(() => {
+    location.reload();
+  }, interval);
 }
