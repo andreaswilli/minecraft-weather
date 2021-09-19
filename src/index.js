@@ -73,7 +73,7 @@ async function getIPAddress() {
 }
 
 async function getCurrentWeather(location) {
-  const weather_res = await fetch(`http://wttr.in/${location}?format=j1`);
+  const weather_res = await fetch(`https://wttr.in/${location}?format=j1`);
   const weather = await weather_res.json();
   return weather.current_condition[0];
 }
