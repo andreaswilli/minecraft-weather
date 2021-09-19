@@ -7,10 +7,18 @@
     <title>Minecraft Weather</title>
   </head>
   <body>
+    <noscript>
+      <img
+        class="bg-image"
+        src="assets/images/sunny_1.png"
+        alt="minecraft screenshot"
+      />
+    </noscript>
     <img
-      class="bg-image"
+      class="bg-image hidden"
       src="assets/images/sunny_1.png"
       alt="minecraft screenshot"
+      loading="lazy"
     />
     <div class="overlay-container">
       <div class="weather-overlay">
@@ -21,6 +29,7 @@
       <a href="" class="unit-switch"></a>
       <a href="" class="position-switch"></a>
     </div>
-    <script src="src/index.js"></script>
+    <script type="module" src="src/constants.js"></script>
+    <script type="module" src="src/index.js"></script>
   </body>
 </html>

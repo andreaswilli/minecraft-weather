@@ -19,6 +19,10 @@ body {
   object-fit: cover;
 }
 
+.bg-image.hidden {
+  display: none;
+}
+
 .overlay-container {
   position: absolute;
   top: 0;
