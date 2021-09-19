@@ -53,7 +53,6 @@ body {
 .settings-overlay {
   font-size: 0.8rem;
   padding: 8px;
-  transition: opacity 300ms ease-in-out;
   background: rgba(33, 33, 33, 0.7);
 }
 
@@ -64,6 +63,10 @@ a {
 
 a + * {
   margin-top: 8px;
+}
+
+.show-on-mouse-move {
+  transition: opacity 300ms ease-in-out;
 }
 
 .hidden {
