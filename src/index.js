@@ -38,7 +38,7 @@ function setImage(description) {
   const random = Math.floor(Math.random() * max + 1);
   document
     .querySelector(".bg-image")
-    .setAttribute("src", `/assets/images/${description}_${random}.png`);
+    .setAttribute("src", `assets/images/${description}_${random}.png`);
 }
 
 // https://github.com/chubin/wttr.in/blob/master/lib/constants.py
