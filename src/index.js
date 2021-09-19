@@ -4,8 +4,15 @@ import {
   getCurrentWeather,
 } from "./api-requests.js";
 import { withCache } from "./cache.js";
-import { NO_OF_IMAGES, WEATHER_MAPPING, WWO_CODE } from "./constants.js";
-import { setInnerText, showOnMouseMove, updateLinks } from "./dom.js";
+import { WEATHER_MAPPING, WWO_CODE } from "./constants.js";
+import {
+  setInnerText,
+  showOnMouseMove,
+  updateLinks,
+  restoreLastImage,
+  setImage,
+  updateOverlayPosition,
+} from "./dom.js";
 
 const isFahrenheit = /[&?]unit=([^&]+)/.exec(location.search)?.[1] === "F";
 const overlayLeft = /[&?]overlay=([^&]+)/.exec(location.search)?.[1] === "left";
@@ -13,15 +20,13 @@ const overlayLeft = /[&?]overlay=([^&]+)/.exec(location.search)?.[1] === "left";
 initPage();
 
 async function initPage() {
-  setLastImage();
-  if (overlayLeft) {
-    document
-      .querySelector(".overlay-container")
-      .classList.add("overlay-container--left");
-  }
+  restoreLastImage();
+  updateOverlayPosition(overlayLeft);
   setInnerText(".description", "loading...");
+
   try {
     let location;
+
     try {
       const coords = await withCache(getGeoLocation, "location");
       location = `[${coords.lat},${coords.lon}]`;
@@ -30,16 +35,19 @@ async function initPage() {
         "Note: Using location based on IP address. For more precise data enable location services.";
       location = await withCache(getIPAddress, "ip");
     }
-    const current_weather = await getCurrentWeather(location);
+    const currentWeather = await getCurrentWeather(location);
+
     if (isFahrenheit) {
-      setInnerText(".temperature", current_weather.temp_F + "°F");
+      setInnerText(".temperature", currentWeather.temp_F + "°F");
     } else {
-      setInnerText(".temperature", current_weather.temp_C + "°C");
+      setInnerText(".temperature", currentWeather.temp_C + "°C");
     }
-    setInnerText(".description", current_weather.weatherDesc[0].value);
-    const weather_description =
-      WEATHER_MAPPING[WWO_CODE[current_weather.weatherCode]];
-    setImage(weather_description);
+
+    setInnerText(".description", currentWeather.weatherDesc[0].value);
+    const weatherDescription =
+      WEATHER_MAPPING[WWO_CODE[currentWeather.weatherCode]];
+
+    setImage(weatherDescription);
     updateLinks(isFahrenheit, overlayLeft);
     showOnMouseMove(".settings-overlay");
   } catch (e) {
@@ -49,28 +57,4 @@ async function initPage() {
     );
     throw e;
   }
-}
-
-function setLastImage() {
-  const lastImage = localStorage.getItem("lastImage");
-  if (lastImage) {
-    setImage(lastImage);
-  }
-  document.querySelector(".bg-image").classList.remove("hidden");
-}
-
-function setImage(description) {
-  localStorage.setItem("lastImage", description);
-  const max = NO_OF_IMAGES[description];
-  const num = calculateImageNumber(max);
-  document
-    .querySelector(".bg-image")
-    .setAttribute("src", `assets/images/${description}_${num}.png`);
-}
-
-function calculateImageNumber(max) {
-  const now = new Date();
-  const msSinceMidnight = now.getTime() - now.setHours(0, 0, 0, 0);
-  const TTL = 1000 * 60 * 30; // 30min
-  return (Math.floor(msSinceMidnight / TTL) % max) + 1;
 }

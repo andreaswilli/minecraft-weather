@@ -1,4 +1,4 @@
-const TTL = 1000 * 60 * 30; // 30min
+export const TTL = 1000 * 60 * 30; // 30min
 
 export function setCacheItem(key, value, validDuration = TTL) {
   localStorage.setItem(
