@@ -1,7 +1,13 @@
 const isFahrenheit = /[&?]unit=([^&]+)/.exec(location.search)?.[1] === "f";
+const overlayLeft = /[&?]overlay=([^&]+)/.exec(location.search)?.[1] === "l";
 
 (async function () {
   try {
+    if (overlayLeft) {
+      document
+        .querySelector(".weather-overlay")
+        .classList.add("weather-overlay--left");
+    }
     setText(".description", "loading...");
     const current_weather = await getCurrentWeather();
     if (isFahrenheit) {

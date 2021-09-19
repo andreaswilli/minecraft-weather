@@ -30,6 +30,12 @@ body {
   text-align: right;
 }
 
+.weather-overlay--left {
+  left: 0;
+  right: unset;
+  text-align: left;
+}
+
 .temperature {
   font-size: 2rem;
   margin-bottom: 4px;
