@@ -45,8 +45,7 @@ function setLastImage() {
 async function getCurrentWeather() {
   const ip_res = await fetch("https://api.ipify.org");
   const ip = await ip_res.text();
-  // TODO: use https as soon as wttr.in fixed their certificate
-  const weather_res = await fetch(`http://wttr.in/${ip}?format=j1`);
+  const weather_res = await fetch(`https://wttr.in/${ip}?format=j1`);
   const weather = await weather_res.json();
   return weather.current_condition[0];
 }
