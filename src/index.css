@@ -1,0 +1,36 @@
+@font-face {
+  font-family: Minecraftia;
+  src: url("/assets/fonts/Minecraftia.ttf");
+}
+
+* {
+  font-family: Minecraftia;
+  margin: 0;
+}
+
+html,
+body {
+  height: 100vh;
+}
+
+.bg-image {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+}
+
+.weather-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: white;
+  background: rgba(33, 33, 33, 0.7);
+  padding: 0 8px 8px 8px;
+  margin: 20px;
+  text-align: right;
+}
+
+.temperature {
+  font-size: 2rem;
+  margin-bottom: 4px;
+}
