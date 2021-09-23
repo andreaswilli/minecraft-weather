@@ -63,7 +63,8 @@ async function initPage() {
   }
 }
 
-function periodicallyRefreshPage(interval = TTL) {
+// the interval should be slightly larger than the TTL of the cache
+function periodicallyRefreshPage(interval = TTL * 1.01) {
   setInterval(() => {
     location.reload();
   }, interval);
